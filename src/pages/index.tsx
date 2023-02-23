@@ -3,6 +3,8 @@ import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import Banner from "@/components/banner/Banner";
 import Navbar from "@/components/nav/Navbar";
+import Card from "@/components/card/Card";
+import {CardSize} from "@/shared";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +23,21 @@ export default function Home() {
         title={'Clifford the red dog'}
         subtitle={'a vary cure dog'}
         imgUrl={'/static/clifford.webp'}
+      />
+
+      <Card
+        imgUrl={'/static/clifford.webp'}
+        size={CardSize.LARGE}
+      />
+
+      <Card
+        imgUrl={'/static/clifford.webp'}
+        size={CardSize.MEDIUM}
+      />
+
+      <Card
+        imgUrl={'/static/clifford.webp'}
+        size={CardSize.SMALL}
       />
     </>
   )
