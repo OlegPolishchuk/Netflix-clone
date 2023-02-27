@@ -10,20 +10,21 @@ const standardImg = 'https://images.unsplash.com/photo-1485846234645-a62644f8472
 type Props = {
   size?: CardSize;
   imgUrl: string;
+  id: number;
 }
 
-const Card = ({size = CardSize.MEDIUM, imgUrl}: Props) => {
+const Card = ({size = CardSize.MEDIUM, imgUrl, id}: Props) => {
   const [imgSrc, setImgSrc] = useState(standardImg + 'wefwef');
   const handleOnError = () => {
     setImgSrc(standardImg);
   }
 
+  const scale = id === 0 ? {scaleY: 1.1} : {scale: 1.1};
   return (
     <div className={styles.container}>
-
       <motion.div
         className={`${styles[size]} ${styles.imgMotionWrapper}`}
-        whileHover={{scale: 1.2}}
+        whileHover={{...scale}}
       >
         <Image
           className={styles.cardImg}

@@ -1,14 +1,22 @@
 import Head from 'next/head'
-import { Inter } from '@next/font/google'
+import {Inter} from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import Banner from "@/components/banner/Banner";
 import Navbar from "@/components/nav/Navbar";
-import Card from "@/components/card/Card";
 import {CardSize} from "@/shared";
+import SectionCards from "@/components/sectionCards/SectionCards";
 
 const inter = Inter({ subsets: ['latin'] })
 
+export type Videos = {
+  imgUrl: string;
+}
 export default function Home() {
+  const disneyVideos: Videos[] = [
+    {imgUrl: '/'},
+    {imgUrl: '/'},
+    {imgUrl: '/'},
+  ]
   return (
     <>
       <Head>
@@ -25,20 +33,9 @@ export default function Home() {
         imgUrl={'/static/clifford.webp'}
       />
 
-      <Card
-        imgUrl={'/static/clifford.webp'}
-        size={CardSize.LARGE}
-      />
-
-      <Card
-        imgUrl={'/static/clifford.webp'}
-        size={CardSize.MEDIUM}
-      />
-
-      <Card
-        imgUrl={'/static/clifford.webp'}
-        size={CardSize.SMALL}
-      />
+      <div className={styles.sectionWrapper}>
+        <SectionCards size={CardSize.LARGE} title={'Disney'} videos={disneyVideos}/>
+      </div>
     </>
   )
 }
