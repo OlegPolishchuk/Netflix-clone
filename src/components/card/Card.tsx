@@ -1,5 +1,7 @@
 import {CardSize} from "@/shared";
 import Image from "next/image";
+
+import {motion} from "framer-motion"
 import styles from './Card.module.css';
 import {SyntheticEvent, useState} from "react";
 
@@ -11,16 +13,18 @@ type Props = {
 }
 
 const Card = ({size = CardSize.MEDIUM, imgUrl}: Props) => {
-  const [imgSrc, setImgSrc] = useState(standardImg+ 'wefwef');
+  const [imgSrc, setImgSrc] = useState(standardImg + 'wefwef');
   const handleOnError = () => {
     setImgSrc(standardImg);
   }
 
   return (
     <div className={styles.container}>
-      Card
 
-      <div className={styles[size]}>
+      <motion.div
+        className={`${styles[size]} ${styles.imgMotionWrapper}`}
+        whileHover={{scale: 1.2}}
+      >
         <Image
           className={styles.cardImg}
           src={imgSrc}
@@ -28,7 +32,7 @@ const Card = ({size = CardSize.MEDIUM, imgUrl}: Props) => {
           fill
           onError={handleOnError}
         />
-      </div>
+      </motion.div>
     </div>
   )
 }
