@@ -2,11 +2,12 @@ import React from "react";
 import styles from './SectionCards.module.css';
 import Card from "@/components/card/Card";
 import {CardSize} from "@/shared";
-import {Videos} from "@/pages";
+import {Video} from "@/types/video";
+
 
 type Props = {
   title: string;
-  videos: Videos[];
+  videos: Video[];
   size: CardSize;
 }
 const SectionCards = ({title, videos, size}: Props) => {
@@ -21,7 +22,7 @@ const SectionCards = ({title, videos, size}: Props) => {
             key={index}
             imgUrl={video.imgUrl}
             size={size}
-            id={index}
+            id={video.id}
           />
         ))}
 

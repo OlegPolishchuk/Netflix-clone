@@ -10,11 +10,11 @@ const standardImg = 'https://images.unsplash.com/photo-1485846234645-a62644f8472
 type Props = {
   size?: CardSize;
   imgUrl: string;
-  id: number;
+  id: string;
 }
 
 const Card = ({size = CardSize.MEDIUM, imgUrl, id}: Props) => {
-  const [imgSrc, setImgSrc] = useState(standardImg + 'wefwef');
+  const [imgSrc, setImgSrc] = useState(imgUrl);
   const handleOnError = () => {
     setImgSrc(standardImg);
   }

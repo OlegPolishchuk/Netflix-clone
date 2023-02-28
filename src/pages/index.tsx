@@ -5,18 +5,16 @@ import Banner from "@/components/banner/Banner";
 import Navbar from "@/components/nav/Navbar";
 import {CardSize} from "@/shared";
 import SectionCards from "@/components/sectionCards/SectionCards";
+import {getVideos} from "@/lib/videos";
+import {GetServerSideProps, NextPage} from "next";
+import {Video} from "@/types";
 
 const inter = Inter({ subsets: ['latin'] })
 
-export type Videos = {
-  imgUrl: string;
+type Props = {
+  disneyVideos: Video[];
 }
-export default function Home() {
-  const disneyVideos: Videos[] = [
-    {imgUrl: '/'},
-    {imgUrl: '/'},
-    {imgUrl: '/'},
-  ]
+const Home: NextPage<Props> = ({disneyVideos}) => {
   return (
     <>
       <Head>
@@ -38,4 +36,16 @@ export default function Home() {
       </div>
     </>
   )
+}
+
+export default Home;
+
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const disneyVideos = getVideos();
+
+  return {
+    props: {
+      disneyVideos
+    }
+  }
 }
