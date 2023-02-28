@@ -41,8 +41,8 @@ const Home: NextPage<Props> = ({disneyVideos}) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const disneyVideos = getVideos();
-
+  const disneyVideos = await getVideos();
+  console.log(disneyVideos)
   return {
     props: {
       disneyVideos

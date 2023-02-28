@@ -64,7 +64,7 @@ interface Items {
   statistics: Statistics;
 }
 
-interface VideosData {
+export interface VideosData {
   items: Items[];
 }
 
