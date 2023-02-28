@@ -3,12 +3,18 @@ import {Video} from "@/types";
 import * as process from "process";
 import {VideosData} from "@/types/video";
 
-export const getVideos = async () => {
+export const getCommonVideos = async (searchQuery: string) => {
   try {
     const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+    const baseUrl = 'https://youtube.googleapis.com/youtube/v3'
 
-    const response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=disney%20trailer&key=${YOUTUBE_API_KEY}`);
+    const response = await fetch(`${baseUrl}/${searchQuery}&maxResults=25&&key=${YOUTUBE_API_KEY}`);
     const data: VideosData = await response.json();
+
+    if (data?.error) {
+      console.log('Youtube API error: ', data.error)
+      return []
+    }
 
     return data?.items.map((item) => {
       return {
@@ -28,3 +34,14 @@ export const getVideos = async () => {
   }
 }
 
+export const getVideos = (searchQuery: string) => {
+  const url = `search?part=snippet&q=${searchQuery}`;
+
+  return getCommonVideos(url);
+}
+
+export const getPopularVideos = () => {
+  const url = 'videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&regionCode=US';
+
+  return getCommonVideos(url);
+}

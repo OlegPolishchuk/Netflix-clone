@@ -66,6 +66,7 @@ interface Items {
 
 export interface VideosData {
   items: Items[];
+  error?: object;
 }
 
 export interface Video {
