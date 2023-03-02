@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Logo from "@/components/logo/Logo";
 import styles from '../styles/Login.module.css';
-import {ChangeEvent, useState, KeyboardEvent} from "react";
+import {ChangeEvent, useState, KeyboardEvent, useEffect} from "react";
 import {useRouter} from "next/router";
 import {magic} from "@/lib/magic-client";
 
@@ -19,7 +19,6 @@ const Login = () => {
       const isAuth = await handleLoginWithEmail(email)
 
       if (isAuth) {
-        setIsLoading(false);
         await router.push('/');
       }
     } else {
@@ -38,6 +37,18 @@ const Login = () => {
       handleLogin()
     }
   }
+
+  useEffect(() => {
+    const handleComplete = () => setIsLoading(false);
+
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleComplete);
+    }
+  }, [router])
 
   return (
     <>
