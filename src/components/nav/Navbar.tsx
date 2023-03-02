@@ -3,6 +3,7 @@ import {useRouter} from "next/router";
 import Link from "next/link";
 import {useState} from "react";
 import Image from "next/image";
+import Logo from "@/components/logo/Logo";
 
 type Props = {
   username: string;
@@ -29,16 +30,7 @@ const Navbar = ({username}: Props) => {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        <a className={styles.logoLink} href={'/'}>
-          <div className={styles.logoWrapper}>
-            <Image
-              src={'/static/netflix.svg'}
-              alt={'logo'}
-              width={128}
-              height={34}
-            />
-          </div>
-        </a>
+       <Logo />
 
         <ul className={styles.navItems}>
           <li
