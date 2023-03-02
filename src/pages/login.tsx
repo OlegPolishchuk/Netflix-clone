@@ -3,17 +3,27 @@ import Logo from "@/components/logo/Logo";
 import styles from '../styles/Login.module.css';
 import {ChangeEvent, useState, KeyboardEvent} from "react";
 import {useRouter} from "next/router";
+import {magic} from "@/lib/magic-client";
 
 const Login = () => {
   const [userMessage, setUserMessage] = useState('');
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (email) {
-      router.push('/');
+      setIsLoading(true)
+
+      const isAuth = await handleLoginWithEmail(email)
+
+      if (isAuth) {
+        setIsLoading(false);
+        await router.push('/');
+      }
     } else {
+      setIsLoading(false);
       setUserMessage('Enter a valid email address')
     }
   };
@@ -38,7 +48,7 @@ const Login = () => {
       <div className={styles.container}>
         <header className={styles.header}>
           <div className={styles.headerWrapper}>
-            <Logo />
+            <Logo/>
           </div>
         </header>
 
@@ -61,8 +71,9 @@ const Login = () => {
             <button
               className={styles.loginBtn}
               onClick={handleLogin}
+              disabled={isLoading}
             >
-              Sign In
+              {isLoading ? 'Loading...' : 'Sign In'}
             </button>
           </div>
         </main>
@@ -72,3 +83,18 @@ const Login = () => {
 }
 
 export default Login;
+
+
+async function handleLoginWithEmail(email: string) {
+  let didToken;
+
+  if (magic) {
+    didToken = await magic.auth.loginWithMagicLink({
+      email,
+    });
+
+    console.log(`didToken =>`, didToken)
+  }
+
+  return !!didToken;
+}
