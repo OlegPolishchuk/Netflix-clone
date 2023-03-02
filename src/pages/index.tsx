@@ -8,6 +8,7 @@ import SectionCards from "@/components/sectionCards/SectionCards";
 import {getCommonVideos, getPopularVideos, getVideos} from "@/lib/videos";
 import {GetServerSideProps, NextPage} from "next";
 import {Video} from "@/types";
+import {magic} from "@/lib/magic-client";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,6 +20,7 @@ type Props = {
 
 }
 const Home: NextPage<Props> = ({disneyVideos, productivityVideos, travelVideos, popularVideos}) => {
+  console.log(magic)
   return (
     <>
       <Head>

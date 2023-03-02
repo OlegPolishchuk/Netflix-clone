@@ -2,13 +2,17 @@ import Head from "next/head";
 import Logo from "@/components/logo/Logo";
 import styles from '../styles/Login.module.css';
 import {ChangeEvent, useState, KeyboardEvent} from "react";
+import {useRouter} from "next/router";
 
 const Login = () => {
   const [userMessage, setUserMessage] = useState('');
   const [email, setEmail] = useState('');
+
+  const router = useRouter();
+
   const handleLogin = () => {
     if (email) {
-
+      router.push('/');
     } else {
       setUserMessage('Enter a valid email address')
     }
