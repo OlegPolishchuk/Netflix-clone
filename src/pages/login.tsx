@@ -1,11 +1,29 @@
 import Head from "next/head";
 import Logo from "@/components/logo/Logo";
 import styles from '../styles/Login.module.css';
+import {ChangeEvent, useState, KeyboardEvent} from "react";
 
 const Login = () => {
+  const [userMessage, setUserMessage] = useState('');
+  const [email, setEmail] = useState('');
   const handleLogin = () => {
-    console.log('bg')
+    if (email) {
+
+    } else {
+      setUserMessage('Enter a valid email address')
+    }
   };
+
+  const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    setUserMessage('');
+    setEmail(event.target.value)
+  }
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleLogin()
+    }
+  }
 
   return (
     <>
@@ -27,9 +45,14 @@ const Login = () => {
             <input
               className={styles.emailInput}
               type='text'
+              value={email}
               placeholder='Email address'
+              onChange={handleChangeEmail}
+              onKeyDown={handleKeyPress}
             />
-            <p className={styles.userMessage}></p>
+            <p className={styles.userMessage}>
+              {userMessage}
+            </p>
 
             <button
               className={styles.loginBtn}
