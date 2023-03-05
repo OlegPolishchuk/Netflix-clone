@@ -1,18 +1,16 @@
 import styles from './Navbar.module.css';
 import {useRouter} from "next/router";
 import Link from "next/link";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Image from "next/image";
 import Logo from "@/components/logo/Logo";
+import {magic} from "@/lib/magic-client";
 
-type Props = {
-  username: string;
-}
-
-const Navbar = ({username}: Props) => {
-  const router = useRouter();
-
+const Navbar = () => {
+  const [user, setUser] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const router = useRouter();
 
   const handleOnclickHome = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     e.preventDefault();
@@ -26,6 +24,27 @@ const Navbar = ({username}: Props) => {
   const handleShowDropdown = () => {
     setShowDropdown(prevState => !prevState)
   }
+
+  const handleSignOut = async () => {
+    try {
+      if (magic) {
+        await magic.user.logout();
+        console.log(await magic.user.isLoggedIn())
+      }
+    } catch (e) {
+      console.log('Logout Error !!! ', e);
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      if (magic) {
+        const userData = await magic.user.getMetadata();
+        console.log(`userData =>`, userData)
+        setUser(userData.email || '')
+      }
+    })()
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -49,7 +68,7 @@ const Navbar = ({username}: Props) => {
               className={styles.usernameBtn}
               onClick={handleShowDropdown}
             >
-              <p className={styles.username}>{username}</p>
+              <p className={styles.username}>{user}</p>
 
               <Image
                 src={'/static/expand_more.svg'}
@@ -62,7 +81,11 @@ const Navbar = ({username}: Props) => {
             {showDropdown && (
               <div className={styles.navDropdown}>
                 <div>
-                  <Link href={'/login'} className={styles.linkName}>
+                  <Link
+                    href={'/login'}
+                    className={styles.linkName}
+                    onClick={handleSignOut}
+                  >
                     Sign out
                   </Link>
                   <div className={styles.lineWrapper}></div>

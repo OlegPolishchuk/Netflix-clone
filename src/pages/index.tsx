@@ -33,7 +33,7 @@ const Home: NextPage<Props> = ({
       </Head>
 
       <div className={styles.main}>
-        <Navbar username={'Oleg@mail.com'}/>
+        <Navbar />
 
         <Banner
           title={'Clifford the red dog'}
