@@ -24,6 +24,8 @@ const Home: NextPage<Props> = ({
                                  travelVideos,
                                  popularVideos
                                }) => {
+  const startVideoId = '4zH5iYM4wJo';
+
   return (
     <>
       <Head>
@@ -37,8 +39,9 @@ const Home: NextPage<Props> = ({
 
         <Banner
           title={'Clifford the red dog'}
-          subtitle={'a vary cure dog'}
+          subtitle={'a very cute dog'}
           imgUrl={'/static/clifford.webp'}
+          videoId={startVideoId}
         />
 
         <div className={styles.sectionWrapper}>
