@@ -18,16 +18,19 @@ const SectionCards = ({title, videos, size}: Props) => {
 
       <div className={styles.cardWrapper}>
 
-        {videos.map((video, index) => (
-          <Link href={`/video/${video.id}`}>
-            <Card
-              key={index}
-              imgUrl={video.imgUrl}
-              size={size}
-              id={video.id}
-            />
-          </Link>
-        ))}
+        {videos.map((video, index) => {
+          const videoId = typeof video.id === 'string' ? video.id : video.id.videoId;
+
+          return (
+            <Link href={`/video/${videoId}`} key={index}>
+              <Card
+                imgUrl={video.imgUrl}
+                size={size}
+                id={videoId}
+              />
+            </Link>
+          )
+        })}
 
       </div>
     </section>

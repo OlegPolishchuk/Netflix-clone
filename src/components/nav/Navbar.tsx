@@ -40,7 +40,6 @@ const Navbar = () => {
     (async () => {
       if (magic) {
         const userData = await magic.user.getMetadata();
-        console.log(`userData =>`, userData)
         setUser(userData.email || '')
       }
     })()

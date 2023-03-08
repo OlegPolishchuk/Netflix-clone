@@ -58,10 +58,15 @@ interface Statistics {
 interface Items {
   kind: string;
   etag: string;
-  id: string;
+  id: ItemId | string;
   snippet: Snippet;
   contentDetails: ContentDetails;
   statistics: Statistics;
+}
+
+export type ItemId = {
+  kind: string,
+  videoId: string
 }
 
 export interface VideosData {
@@ -70,7 +75,7 @@ export interface VideosData {
 }
 
 export interface Video {
-  id: string;
+  id: ItemId | string;
   imgUrl: string;
   title: string;
 }
