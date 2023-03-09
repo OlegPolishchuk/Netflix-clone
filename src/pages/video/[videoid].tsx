@@ -7,7 +7,7 @@ Modal.setAppElement('#__next');
 const Video = () => {
   const router = useRouter();
 
-  const { videoid } = router.query;
+  const {videoid} = router.query;
 
 
   return (
@@ -15,17 +15,19 @@ const Video = () => {
       <Modal
         isOpen
         contentLabel="Watch the video"
-        onRequestClose={()=> router.back()}
+        onRequestClose={() => router.back()}
         className={styles.modal}
         overlayClassName={styles.overlay}
       >
         <div>
-          <iframe id="ytplayer"
-                  width="640"
-                  height="360"
-                  src={`https://www.youtube.com/embed/${videoid}?autoplay=0&controls=0&origin=http://example.com&rel=0`}
-          >
-          </iframe>
+          <iframe
+            className={styles.videoPlayer}
+            id="ytplayer"
+            width="100%"
+            height="360"
+            frameBorder={0}
+            src={`https://www.youtube.com/embed/${videoid}?autoplay=0&controls=0&origin=http://example.com&rel=0`}
+          />
         </div>
       </Modal>
     </div>
