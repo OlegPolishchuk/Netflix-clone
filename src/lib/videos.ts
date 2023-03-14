@@ -5,13 +5,21 @@ import {VideoById, VideosData} from "@/types/video";
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const baseUrl = 'https://youtube.googleapis.com/youtube/v3';
 
+const fetchVideos = async (url: string) => {
+  const response = await fetch(`${baseUrl}/${url}&maxResults=25&&key=${YOUTUBE_API_KEY}`);
+  const data: VideosData = await response.json();
+
+  return data;
+}
+
 export const getCommonVideos = async (searchQuery: string) => {
   try {
-    const response = await fetch(`${baseUrl}/${searchQuery}&maxResults=25&&key=${YOUTUBE_API_KEY}`);
-    const data: VideosData = await response.json();
+    const isDev = process.env.DEVELOPMENT;
+    console.log(!!isDev)
+    const data =  !!isDev ? videoData : await fetchVideos(searchQuery);
 
-    if (data?.error) {
-      console.log('Youtube API error: ', data.error)
+    if (!data) {
+      console.log('Youtube API error: ', data)
       return []
     }
 
