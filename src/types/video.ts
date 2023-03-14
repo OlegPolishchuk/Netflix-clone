@@ -1,5 +1,3 @@
-
-
 interface Default {
   url: string;
   width: number;
@@ -74,8 +72,25 @@ export interface VideosData {
   error?: object;
 }
 
-export interface Video {
+export type Video = {
   id: ItemId | string;
   imgUrl: string;
   title: string;
+}
+
+export type VideoById = Video & {
+  id: string;
+  snippet: {
+    publishedAt: string;
+    channelId: string;
+    description: string;
+    title: string;
+  },
+  channelTitle: string;
+  statistics: {
+    viewCount: string;
+    likeCount: string;
+    favoriteCount: string;
+    commentCount: string;
+  }
 }

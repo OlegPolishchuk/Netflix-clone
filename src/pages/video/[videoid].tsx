@@ -1,23 +1,24 @@
 import {useRouter} from "next/router";
 import Modal from 'react-modal';
 import styles from '../../styles/Video.module.css';
+import {GetStaticPaths, GetStaticProps, NextPage} from "next";
+import {getYouTubeVideoById} from "@/lib/videos";
+import {VideoById} from "@/types/video";
 
 Modal.setAppElement('#__next');
 
-const Video = () => {
+type Props = {
+ video: VideoById;
+}
+
+const Video: NextPage<Props> = (video) => {
   const router = useRouter();
 
   const {videoid} = router.query;
-
-  const video = {
-    title: 'Hi cute dog',
-    publishTime: '1990-01-01',
-    description: 'A big red dog that is super cute',
-    channelTitle: 'Paramount Pictures',
-    viewCount: 10000,
-  }
-
-  const {channelTitle, title, viewCount, publishTime, description} = video;
+  console.log(`video =>`, video)
+  const {id, snippet, imgUrl, channelTitle, statistics} = video.video;
+  const {description, publishedAt, channelId, title} = snippet;
+  const {viewCount} = statistics;
 
   return (
     <div className={styles.container}>
@@ -41,7 +42,7 @@ const Video = () => {
           <div className={styles.modalBody}>
             <div className={styles.modalBodyContent}>
               <div className={styles.col1}>
-                <p className={styles.publishTime}>{publishTime}</p>
+                <p className={styles.publishTime}>{publishedAt}</p>
                 <p className={styles.title}>{title}</p>
                 <p className={styles.description}>{description}</p>
               </div>
@@ -66,3 +67,34 @@ const Video = () => {
 }
 
 export default Video;
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  // const video = {
+  //   title: 'Hi cute dog',
+  //   publishTime: '1990-01-01',
+  //   description: 'A big red dog that is super cute',
+  //   channelTitle: 'Paramount Pictures',
+  //   viewCount: 10000,
+  // };
+  const videId = '4zH5iYM4wJo';
+
+  const video = await getYouTubeVideoById(videId);
+
+  return {
+    props: {
+      video
+    },
+    revalidate: 10,
+  }
+}
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const listOfVideos = ['mYfJxlgR2jw', '4zH5iYM4wJo', 'KCPEHsAViiQ'];
+
+  const paths = listOfVideos.map(video => ({params: { videoid: video }}))
+
+  return {
+    paths,
+    fallback: 'blocking',
+  }
+}
