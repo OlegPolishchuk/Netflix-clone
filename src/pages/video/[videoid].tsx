@@ -4,6 +4,7 @@ import styles from '../../styles/Video.module.css';
 import {GetStaticPaths, GetStaticProps, NextPage} from "next";
 import {getYouTubeVideoById} from "@/lib/videos";
 import {VideoById} from "@/types/video";
+import Navbar from "@/components/nav/Navbar";
 
 Modal.setAppElement('#__next');
 
@@ -15,13 +16,14 @@ const Video: NextPage<Props> = (video) => {
   const router = useRouter();
 
   const {videoid} = router.query;
-  console.log(`video =>`, video)
-  const {id, snippet, imgUrl, channelTitle, statistics} = video.video;
-  const {description, publishedAt, channelId, title} = snippet;
+  const {id, snippet, statistics} = video.video;
+  const {description, publishedAt, channelId, title, channelTitle} = snippet;
   const {viewCount} = statistics;
 
   return (
     <div className={styles.container}>
+      <Navbar />
+
       <Modal
         isOpen
         contentLabel="Watch the video"
@@ -68,17 +70,9 @@ const Video: NextPage<Props> = (video) => {
 
 export default Video;
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  // const video = {
-  //   title: 'Hi cute dog',
-  //   publishTime: '1990-01-01',
-  //   description: 'A big red dog that is super cute',
-  //   channelTitle: 'Paramount Pictures',
-  //   viewCount: 10000,
-  // };
-  const videId = '4zH5iYM4wJo';
-
-  const video = await getYouTubeVideoById(videId);
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
+  const {videoid} = context.params as {videoid: string};
+  const video = await getYouTubeVideoById(videoid);
 
   return {
     props: {
@@ -90,7 +84,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
 export const getStaticPaths: GetStaticPaths = () => {
   const listOfVideos = ['mYfJxlgR2jw', '4zH5iYM4wJo', 'KCPEHsAViiQ'];
-
   const paths = listOfVideos.map(video => ({params: { videoid: video }}))
 
   return {

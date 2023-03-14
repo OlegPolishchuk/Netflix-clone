@@ -85,6 +85,7 @@ export type VideoById = Video & {
     channelId: string;
     description: string;
     title: string;
+    channelTitle: string;
   },
   channelTitle: string;
   statistics: {
