@@ -9,6 +9,7 @@ import {getPopularVideos, getVideos} from "@/lib/videos";
 import {GetServerSideProps, NextPage} from "next";
 import {Video} from "@/types";
 
+
 const inter = Inter({subsets: ['latin']})
 
 type Props = {
