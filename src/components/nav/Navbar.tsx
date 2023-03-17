@@ -39,8 +39,10 @@ const Navbar = () => {
   useEffect(() => {
     (async () => {
       if (magic) {
-        const userData = await magic.user.getMetadata();
-        setUser(userData.email || '')
+        const { email, issuer } = await magic.user.getMetadata();
+        const didToken = await magic.user.getIdToken();
+        console.log({didToken})
+        setUser(email || '')
       }
     })()
   }, []);
