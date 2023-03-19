@@ -8,6 +8,7 @@ import SectionCards from "@/components/sectionCards/SectionCards";
 import {getPopularVideos, getVideos} from "@/lib/videos";
 import {GetServerSideProps, NextPage} from "next";
 import {Video} from "@/types";
+import {startFetchMyQuery} from "@/lib/db/hasura";
 
 
 const inter = Inter({subsets: ['latin']})
@@ -26,6 +27,8 @@ const Home: NextPage<Props> = ({
                                  popularVideos
                                }) => {
   const startVideoId = '4zH5iYM4wJo';
+
+  startFetchMyQuery();
 
   return (
     <>

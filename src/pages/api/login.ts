@@ -2,6 +2,7 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {magicAdmin} from "@/lib/magic";
 import jwt from 'jsonwebtoken';
 import * as process from "process";
+import {isNewUser} from "@/lib/db/hasura";
 
 const JWT_SECRET = `${process.env.JWT_SECRET}`;
 const login = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -29,7 +30,10 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
         JWT_SECRET
       );
 
-      return res.send({done: true})
+      //check if user exist
+      const isNewUserQuery = await isNewUser(token);
+
+      return res.send({done: true, isNewUserQuery})
     } catch (e) {
       console.log('Something went wrong logging in', e);
 
