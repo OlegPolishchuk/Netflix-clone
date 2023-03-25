@@ -10,11 +10,8 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const auth = req.headers.authorization;
       const didToken = auth ? auth.split(' ')[1] : '';
-      console.log({didToken})
-
 
       const metaData = await magicAdmin.users.getMetadataByToken(didToken);
-      console.log({metaData})
 
       const token = jwt.sign(
         {
@@ -30,8 +27,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
         JWT_SECRET
       );
 
-      //check if user exist
-      const isNewUserQuery = await isNewUser(token);
+      const isNewUserQuery = await isNewUser(token, metaData.issuer);
 
       return res.send({done: true, isNewUserQuery})
     } catch (e) {

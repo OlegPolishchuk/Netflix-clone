@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import {Inter} from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import Banner from "@/components/banner/Banner";
 import Navbar from "@/components/nav/Navbar";
@@ -8,10 +7,7 @@ import SectionCards from "@/components/sectionCards/SectionCards";
 import {getPopularVideos, getVideos} from "@/lib/videos";
 import {GetServerSideProps, NextPage} from "next";
 import {Video} from "@/types";
-import {startFetchMyQuery} from "@/lib/db/hasura";
 
-
-const inter = Inter({subsets: ['latin']})
 
 type Props = {
   disneyVideos: Video[];
@@ -27,8 +23,6 @@ const Home: NextPage<Props> = ({
                                  popularVideos
                                }) => {
   const startVideoId = '4zH5iYM4wJo';
-
-  startFetchMyQuery();
 
   return (
     <>
