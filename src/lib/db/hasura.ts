@@ -1,4 +1,5 @@
 import * as process from "process";
+import {MagicUserMetadata} from "magic-sdk";
 
 const HASURA_ADMIN_URL = process.env.NEXT_PUBLIC_HASURA_ADMIN_URL as string;
 const HASURA_ADMIN_SECRET = process.env.NEXT_PUBLIC_HASURA_ADMIN_SECRET as string;
@@ -49,3 +50,33 @@ export const queryHasuraGQL = async (
 
   return await result.json();
 }
+
+
+export async function createNewUser(token: string, metadata: MagicUserMetadata) {
+  const operationsDoc = `
+  mutation createNewUser($issuer: String!, $email: String!, $publicAddress: String!) {
+    insert_users(objects: {email: $email, issuer: $issuer, publicAddress: $publicAddress}) {
+      returning {
+        email
+        id
+        issuer
+      }
+    }
+  }
+`;
+
+  const {issuer, email, publicAddress} = metadata;
+
+  const response = await queryHasuraGQL(
+    operationsDoc,
+    'createNewUser',
+    {
+      issuer,
+      email,
+      publicAddress
+    },
+    token);
+
+  return response;
+}
+

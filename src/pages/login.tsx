@@ -5,6 +5,7 @@ import {ChangeEvent, useState, KeyboardEvent, useEffect} from "react";
 import {useRouter} from "next/router";
 import {magic} from "@/lib/magic-client";
 
+
 const Login = () => {
   const [userMessage, setUserMessage] = useState('');
   const [email, setEmail] = useState('');
@@ -16,10 +17,33 @@ const Login = () => {
     if (email) {
       setIsLoading(true)
 
-      const isAuth = await handleLoginWithEmail(email)
+      if (magic) {
+        const didToken = await magic.auth.loginWithMagicLink({
+          email,
+        });
 
-      if (isAuth) {
-        await router.push('/');
+
+        if (didToken) {
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${didToken}`,
+              'Content-Type': 'application/json',
+            }
+          })
+
+          const loggedInResponse = await response.json();
+
+          if (loggedInResponse.done) {
+            console.log( {loggedInResponse})
+            await router.push('/');
+
+          } else {
+            setIsLoading(false);
+            setUserMessage('Something went wrong logging in')
+          }
+
+        }
       }
     } else {
       setIsLoading(false);
