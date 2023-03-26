@@ -1,6 +1,10 @@
 import React from 'react';
 
-export const Like = ({ fill = "white", selected = false }) => {
+interface Props {
+  fill?: string;
+  selected?: boolean
+}
+export const Like = ({ fill = "white", selected = false }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

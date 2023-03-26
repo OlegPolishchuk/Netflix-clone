@@ -7,6 +7,7 @@ import {VideoById} from "@/types/video";
 import Navbar from "@/components/nav/Navbar";
 import {Like} from "@/components/icons/Like";
 import {Dislike} from "@/components/icons/DislikeIcon";
+import {useState} from "react";
 
 Modal.setAppElement('#__next');
 
@@ -17,10 +18,22 @@ type Props = {
 const Video: NextPage<Props> = (video) => {
   const router = useRouter();
 
+  const [toggleLike, setToggleLike] = useState(false);
+  const [toggleDislike, setToggleDislike] = useState(false);
+
   const {videoid} = router.query;
   const {id, snippet, statistics} = video.video;
   const {description, publishedAt, channelId, title, channelTitle} = snippet;
   const {viewCount} = statistics;
+
+  const handleToggleLike = () => {
+    setToggleLike(!toggleLike)
+    setToggleDislike(toggleLike)
+  }
+  const handleToggleDislike = () => {
+    setToggleDislike(!toggleDislike)
+    setToggleLike(toggleDislike)
+  }
 
   return (
     <div className={styles.container}>
@@ -45,16 +58,16 @@ const Video: NextPage<Props> = (video) => {
 
           <div className={styles.likeDislikeBtnWrapper}>
            <div className={styles.likeBtnWrapper}>
-             <button>
+             <button onClick={handleToggleLike}>
                <div className={styles.btnWrapper}>
-                 <Like/>
+                 <Like selected={toggleLike} />
                </div>
              </button>
            </div>
 
-            <button>
+            <button onClick={handleToggleDislike}>
               <div className={styles.btnWrapper}>
-                <Dislike/>
+                <Dislike selected={toggleDislike} />
               </div>
             </button>
           </div>
