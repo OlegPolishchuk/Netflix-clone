@@ -29,7 +29,6 @@ const Navbar = () => {
     try {
       if (magic) {
         await magic.user.logout();
-        console.log(await magic.user.isLoggedIn())
       }
     } catch (e) {
       console.log('Logout Error !!! ', e);
@@ -41,7 +40,6 @@ const Navbar = () => {
       if (magic) {
         const { email, issuer } = await magic.user.getMetadata();
         const didToken = await magic.user.getIdToken();
-        console.log({didToken})
         setUser(email || '')
       }
     })()

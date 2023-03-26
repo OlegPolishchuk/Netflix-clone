@@ -5,11 +5,13 @@ import {GetStaticPaths, GetStaticProps, NextPage} from "next";
 import {getYouTubeVideoById} from "@/lib/videos";
 import {VideoById} from "@/types/video";
 import Navbar from "@/components/nav/Navbar";
+import {Like} from "@/components/icons/Like";
+import {Dislike} from "@/components/icons/DislikeIcon";
 
 Modal.setAppElement('#__next');
 
 type Props = {
- video: VideoById;
+  video: VideoById;
 }
 
 const Video: NextPage<Props> = (video) => {
@@ -22,7 +24,7 @@ const Video: NextPage<Props> = (video) => {
 
   return (
     <div className={styles.container}>
-      <Navbar />
+      <Navbar/>
 
       <Modal
         isOpen
@@ -40,6 +42,22 @@ const Video: NextPage<Props> = (video) => {
             frameBorder={0}
             src={`https://www.youtube.com/embed/${videoid}?autoplay=0&controls=0&origin=http://example.com&rel=0`}
           />
+
+          <div className={styles.likeDislikeBtnWrapper}>
+           <div className={styles.likeBtnWrapper}>
+             <button>
+               <div className={styles.btnWrapper}>
+                 <Like/>
+               </div>
+             </button>
+           </div>
+
+            <button>
+              <div className={styles.btnWrapper}>
+                <Dislike/>
+              </div>
+            </button>
+          </div>
 
           <div className={styles.modalBody}>
             <div className={styles.modalBodyContent}>
@@ -71,7 +89,7 @@ const Video: NextPage<Props> = (video) => {
 export default Video;
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
-  const {videoid} = context.params as {videoid: string};
+  const {videoid} = context.params as { videoid: string };
   const video = await getYouTubeVideoById(videoid);
 
   return {
@@ -84,7 +102,7 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
 
 export const getStaticPaths: GetStaticPaths = () => {
   const listOfVideos = ['mYfJxlgR2jw', '4zH5iYM4wJo', 'KCPEHsAViiQ'];
-  const paths = listOfVideos.map(video => ({params: { videoid: video }}))
+  const paths = listOfVideos.map(video => ({params: {videoid: video}}))
 
   return {
     paths,
