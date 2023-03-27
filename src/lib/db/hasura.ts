@@ -24,7 +24,6 @@ export async function isNewUser(token: string, issuer: string | null) {
     },
     token);
 
-  console.log({response: response.data.users.length})
   return response.data.users.length === 0;
 }
 
@@ -101,6 +100,54 @@ export async function findVideoByUser(userId: string, videoId: string, token: st
     },
     token);
 
-  return response;
+  return response.data.stats.length > 0;
 }
+
+interface UpdateStats {
+  token: string;
+  params: {
+    favourited: number,
+    userId: string,
+    watched: boolean,
+    videoId: string
+  }
+}
+export async function updateStats({token, params}: UpdateStats) {
+  const {videoId, userId, watched, favourited} = params;
+
+  const operationsDoc = `
+    mutation updateStats($userId: String!, $watched: Boolean!, $videoId: String!) {
+      update_stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}, _set: {watched: $watched}, favourited: $favourited) {
+        favourited,
+        userId,
+        watched,
+        videoId
+    }
+  }
+`;
+
+ return await queryHasuraGQL(
+    operationsDoc,
+    'updateStats',
+    {
+      favourited,
+      userId,
+      watched,
+      videoId
+    },
+    token);
+}
+
+
+const operationsDoc1 = `
+  mutation insertStats($favourited: Int!, $userId: String!, $watched: Boolean!, $videoId: String!) {
+    insert_stats_one(object: {favourited: $favourited, userId: $userId, videoId: $videoId, watched: $watched}) {
+      id
+      userId
+      videoId
+      watched
+    }
+  }
+`;
+
 

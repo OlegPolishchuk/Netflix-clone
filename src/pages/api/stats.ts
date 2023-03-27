@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import jwt from "jsonwebtoken";
 import * as process from "process";
-import {findVideoByUser} from "@/lib/db/hasura";
+import {findVideoByUser, updateStats} from "@/lib/db/hasura";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -19,7 +19,21 @@ export default async function stats(req: NextApiRequest, res: NextApiResponse) {
       const decoded = jwt.verify(token, JWT_SECRET);
       const {issuer} = decoded as {issuer: string}
 
-      const findVideoId = await findVideoByUser(issuer, videoId, token);
+      const doesStatsExist = await findVideoByUser(issuer, videoId, token);
+
+      if (doesStatsExist) {
+        const params = {
+          favourited: 0,
+          watched: true,
+          userId: issuer,
+          videoId,
+        }
+        /// update it
+        const response = await updateStats({token, params});
+
+        res.send({message: response})
+      }
+      //add it
 
       res.send({message: 'it works'})
     }
