@@ -20,8 +20,8 @@ export async function isNewUser(token: string, issuer: string | null) {
     operationsDoc,
     'isNewUser',
     {
-    issuer,
-  },
+      issuer,
+    },
     token);
 
   console.log({response: response.data.users.length})
@@ -74,6 +74,30 @@ export async function createNewUser(token: string, metadata: MagicUserMetadata) 
       issuer,
       email,
       publicAddress
+    },
+    token);
+
+  return response;
+}
+
+export async function findVideoByUser(userId: string, videoId: string, token: string) {
+  const operationsDoc = `
+  query findVideoIdByUser($userId: String!, $videoId: String!) {
+    stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}) {
+      id
+      userId
+      videoId
+      watched
+    }
+  }
+`;
+
+  const response = await queryHasuraGQL(
+    operationsDoc,
+    'findVideoIdByUser',
+    {
+      videoId,
+      userId
     },
     token);
 
