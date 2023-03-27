@@ -112,21 +112,31 @@ interface UpdateStats {
     videoId: string
   }
 }
+
 export async function updateStats({token, params}: UpdateStats) {
   const {videoId, userId, watched, favourited} = params;
 
+  console.log(`params === `, params)
+
   const operationsDoc = `
-    mutation updateStats($userId: String!, $watched: Boolean!, $videoId: String!) {
-      update_stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}, _set: {watched: $watched}, favourited: $favourited) {
-        favourited,
-        userId,
-        watched,
-        videoId
+    mutation updateStats($favourited: Int!, $userId: String!, $watched: Boolean!, $videoId: String!) {
+      update_stats(
+        _set: {watched: $watched, favourited: $favourited}, 
+        where: {
+          userId: {_eq: $userId}, 
+          videoId: {_eq: $videoId}
+        }) {
+        returning {
+          favourited,
+          userId,
+          watched,
+          videoId
+        }
+      }
     }
-  }
 `;
 
- return await queryHasuraGQL(
+  return await queryHasuraGQL(
     operationsDoc,
     'updateStats',
     {
@@ -139,15 +149,35 @@ export async function updateStats({token, params}: UpdateStats) {
 }
 
 
-const operationsDoc1 = `
+export async function insertStats({token, params}: UpdateStats) {
+  const {videoId, userId, watched, favourited} = params;
+
+  const operationsDoc = `
   mutation insertStats($favourited: Int!, $userId: String!, $watched: Boolean!, $videoId: String!) {
-    insert_stats_one(object: {favourited: $favourited, userId: $userId, videoId: $videoId, watched: $watched}) {
-      id
-      userId
-      videoId
-      watched
-    }
+    insert_stats_one(object: {
+        favourited: $favourited,
+        userId: $userId,
+        videoId: $videoId, 
+        watched: $watched}) {
+           userId
+            videoId
+            watched
+        }
   }
 `;
+
+  return await queryHasuraGQL(
+    operationsDoc,
+    'insertStats',
+    {
+      favourited,
+      userId,
+      watched,
+      videoId
+    },
+    token);
+}
+
+
 
 

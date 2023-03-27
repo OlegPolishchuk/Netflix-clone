@@ -26,13 +26,37 @@ const Video: NextPage<Props> = (video) => {
   const {description, publishedAt, channelId, title, channelTitle} = snippet;
   const {viewCount} = statistics;
 
-  const handleToggleLike = () => {
-    setToggleLike(!toggleLike)
-    setToggleDislike(toggleLike)
+  const runRatingService = async (favourited: number) => {
+   return await fetch('/api/stats', {
+      method: 'POST',
+      body: JSON.stringify({
+        videoId: videoid,
+        favourited,
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
-  const handleToggleDislike = () => {
-    setToggleDislike(!toggleDislike)
+
+  const handleToggleLike = async () => {
+    const val = !toggleLike;
+    const favourite = val ? 1 : 0;
+
+    setToggleLike(val)
+    setToggleDislike(toggleLike)
+
+    return await runRatingService(favourite)
+  }
+
+  const handleToggleDislike = async () => {
+    const val = !toggleDislike;
+    const favourite = val ? 0 : 1;
+
+    setToggleDislike(val)
     setToggleLike(toggleDislike)
+
+    return await runRatingService(favourite)
   }
 
   return (
