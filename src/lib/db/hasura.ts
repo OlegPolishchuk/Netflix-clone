@@ -100,7 +100,7 @@ export async function findVideoByUser(userId: string, videoId: string, token: st
     },
     token);
 
-  return response.data.stats.length > 0;
+  return response.data.stats;
 }
 
 interface UpdateStats {
