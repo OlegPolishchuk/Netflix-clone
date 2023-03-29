@@ -6,14 +6,5 @@ export const useRedirectUser = async (req: IncomingMessage & {cookies: Partial<{
   const token = req ? req.cookies.token as string : '';
   const userId = await verifyToken(token);
 
-  if (!userId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      }
-    }
-  }
-
   return {userId, token}
 }
