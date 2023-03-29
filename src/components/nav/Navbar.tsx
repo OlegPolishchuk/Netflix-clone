@@ -8,6 +8,7 @@ import {magic} from "@/lib/magic-client";
 
 const Navbar = () => {
   const [user, setUser] = useState('');
+  const [didToken, setDidToken] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
   const router = useRouter();
@@ -25,22 +26,30 @@ const Navbar = () => {
     setShowDropdown(prevState => !prevState)
   }
 
-  const handleSignOut = async () => {
+  const handleSignout = async () => {
     try {
-      if (magic) {
-        await magic.user.logout();
-      }
-    } catch (e) {
-      console.log('Logout Error !!! ', e);
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${didToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+    } catch (error) {
+      console.error("Error logging out", error);
+      router.push("/login");
     }
-  }
+  };
 
   useEffect(() => {
     (async () => {
       if (magic) {
         const { email, issuer } = await magic.user.getMetadata();
         const didToken = await magic.user.getIdToken();
-        setUser(email || '')
+        setUser(email || '');
+        setDidToken(didToken);
       }
     })()
   }, []);
@@ -83,7 +92,7 @@ const Navbar = () => {
                   <Link
                     href={'/login'}
                     className={styles.linkName}
-                    onClick={handleSignOut}
+                    onClick={handleSignout}
                   >
                     Sign out
                   </Link>

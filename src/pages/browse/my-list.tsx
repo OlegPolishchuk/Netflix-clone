@@ -42,6 +42,15 @@ export default MyList;
 export const getServerSideProps: GetServerSideProps<Props> = async ({req}) => {
   const {userId, token} = await useRedirectUser(req);
 
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
+
   const myListVideos = await getMyListVideos(userId, token);
 
   return {
