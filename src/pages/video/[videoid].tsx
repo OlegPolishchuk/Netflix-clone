@@ -7,7 +7,7 @@ import {VideoById} from "@/types/video";
 import Navbar from "@/components/nav/Navbar";
 import {Like} from "@/components/icons/Like";
 import {Dislike} from "@/components/icons/DislikeIcon";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 Modal.setAppElement('#__next');
 
@@ -27,7 +27,7 @@ const Video: NextPage<Props> = (video) => {
   const {viewCount} = statistics;
 
   const runRatingService = async (favourited: number) => {
-   return await fetch('/api/stats', {
+    return await fetch('/api/stats', {
       method: 'POST',
       body: JSON.stringify({
         videoId: videoid,
@@ -59,6 +59,25 @@ const Video: NextPage<Props> = (video) => {
     return await runRatingService(favourite)
   }
 
+  useEffect(() => {
+    fetch(`/api/stats?videoId=${videoid}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        const favourited = data.findVideo[0].favourited;
+
+        if (favourited === 1) {
+          setToggleLike(true)
+        } else {
+          setToggleDislike(true)
+        }
+      })
+  }, [])
+
   return (
     <div className={styles.container}>
       <Navbar/>
@@ -81,17 +100,17 @@ const Video: NextPage<Props> = (video) => {
           />
 
           <div className={styles.likeDislikeBtnWrapper}>
-           <div className={styles.likeBtnWrapper}>
-             <button onClick={handleToggleLike}>
-               <div className={styles.btnWrapper}>
-                 <Like selected={toggleLike} />
-               </div>
-             </button>
-           </div>
+            <div className={styles.likeBtnWrapper}>
+              <button onClick={handleToggleLike}>
+                <div className={styles.btnWrapper}>
+                  <Like selected={toggleLike}/>
+                </div>
+              </button>
+            </div>
 
             <button onClick={handleToggleDislike}>
               <div className={styles.btnWrapper}>
-                <Dislike selected={toggleDislike} />
+                <Dislike selected={toggleDislike}/>
               </div>
             </button>
           </div>

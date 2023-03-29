@@ -84,6 +84,7 @@ export async function findVideoByUser(userId: string, videoId: string, token: st
   query findVideoIdByUser($userId: String!, $videoId: String!) {
     stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}) {
       id
+      favourited
       userId
       videoId
       watched

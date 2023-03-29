@@ -14,13 +14,16 @@ export default async function stats(req: NextApiRequest, res: NextApiResponse) {
       return res.status(403);
     }
 
-    const {videoId} = req.body;
+    const inputParams = req.method === 'POST' ?  req.body : req.query;
+    const {videoId} = inputParams;
 
     const decoded = jwt.verify(token, JWT_SECRET);
     const {issuer} = decoded as { issuer: string }
 
     const findVideo = await findVideoByUser(issuer, videoId, token);
     const doesStatsExist = findVideo?.length > 0;
+
+
 
     if (req.method === 'POST') {
       const {favourited, watched = true} = req.body;
