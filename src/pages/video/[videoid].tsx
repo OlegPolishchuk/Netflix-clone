@@ -68,13 +68,17 @@ const Video: NextPage<Props> = (video) => {
     })
       .then(res => res.json())
       .then(data => {
-        const favourited = data.findVideo[0].favourited;
+        const videos = data.findVideo;
 
-        if (favourited === 1) {
-          setToggleLike(true)
-        } else {
-          setToggleDislike(true)
-        }
+       if (videos) {
+         const favourited =videos[0]?.favourited;
+
+         if (favourited === 1) {
+           setToggleLike(true)
+         } else {
+           setToggleDislike(true)
+         }
+       }
       })
   }, [])
 

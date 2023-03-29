@@ -2,8 +2,9 @@ import {NextApiRequest, NextApiResponse} from "next";
 import jwt from "jsonwebtoken";
 import * as process from "process";
 import {findVideoByUser, insertStats, updateStats} from "@/lib/db/hasura";
+import {verifyToken} from "@/lib/utils";
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
+
 
 export default async function stats(req: NextApiRequest, res: NextApiResponse) {
 
@@ -17,10 +18,9 @@ export default async function stats(req: NextApiRequest, res: NextApiResponse) {
     const inputParams = req.method === 'POST' ?  req.body : req.query;
     const {videoId} = inputParams;
 
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const {issuer} = decoded as { issuer: string }
+    const userId = await verifyToken(token);
 
-    const findVideo = await findVideoByUser(issuer, videoId, token);
+    const findVideo = await findVideoByUser(userId, videoId, token);
     const doesStatsExist = findVideo?.length > 0;
 
 
@@ -31,7 +31,7 @@ export default async function stats(req: NextApiRequest, res: NextApiResponse) {
       const params = {
         favourited,
         watched,
-        userId: issuer,
+        userId: userId,
         videoId,
       }
 

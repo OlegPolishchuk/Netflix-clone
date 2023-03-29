@@ -7,6 +7,8 @@ import SectionCards from "@/components/sectionCards/SectionCards";
 import {getPopularVideos, getVideos, getWatchedAgainVideos} from "@/lib/videos";
 import {GetServerSideProps, NextPage} from "next";
 import {Video} from "@/types";
+import {verifyToken} from "@/lib/utils";
+import {useRedirectUser} from "@/utils/redirectUser";
 
 
 type Props = {
@@ -59,9 +61,17 @@ const Home: NextPage<Props> = ({
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const userId = 'did:ethr:0x9c821BC37aB21d182454896f25b60CBc76faE0C6';
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3N1ZXIiOiJkaWQ6ZXRocjoweDljODIxQkMzN2FCMjFkMTgyNDU0ODk2ZjI1YjYwQ0JjNzZmYUUwQzYiLCJwdWJsaWNBZGRyZXNzIjoiMHg5YzgyMUJDMzdhQjIxZDE4MjQ1NDg5NmYyNWI2MENCYzc2ZmFFMEM2IiwiZW1haWwiOiJvbGVnLm1ha2tvcm1AZ21haWwuY29tIiwib2F1dGhQcm92aWRlciI6bnVsbCwicGhvbmVOdW1iZXIiOm51bGwsIndhbGxldHMiOltdLCJpYXQiOjE2Nzk3NTMwMDAsImV4cCI6MTY3OTgxMzQ4MDEsImh0dHBzOi8vaGFzdXJhLmlvL2p3dC9jbGFpbXMiOnsieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsidXNlciIsImFkbWluIl0sIngtaGFzdXJhLXVzZXItaWQiOiJkaWQ6ZXRocjoweDljODIxQkMzN2FCMjFkMTgyNDU0ODk2ZjI1YjYwQ0JjNzZmYUUwQzYifX0.PxA3xsm5hrFiq3I8S_rv6Jp8eQKpAfEXnMIdkFR8mgo';
+export const getServerSideProps: GetServerSideProps<Props> = async ({req}) => {
+  const {userId, token} = await useRedirectUser(req);
+
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
 
   const disneyVideos = await getVideos('disney trailers');
   const productivityVideos = await getVideos('productivity');
