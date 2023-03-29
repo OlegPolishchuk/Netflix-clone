@@ -11,20 +11,26 @@ type Props = {
   size?: CardSize;
   imgUrl: string;
   id: string;
+  shouldScale?: boolean;
 }
 
-const Card = ({size = CardSize.MEDIUM, imgUrl, id}: Props) => {
+const Card = ({size = CardSize.MEDIUM, imgUrl, id, shouldScale=true}: Props) => {
   const [imgSrc, setImgSrc] = useState(imgUrl);
   const handleOnError = () => {
     setImgSrc(standardImg);
   }
 
   const scale = id === `0` ? {scaleY: 1.1} : {scale: 1.1};
+  const shouldHover = shouldScale && {
+    whileHover: {...scale}
+  }
+
+
   return (
     <div className={styles.container}>
       <motion.div
         className={`${styles[size]} ${styles.imgMotionWrapper}`}
-        whileHover={{...scale}}
+        {...shouldHover}
       >
         <Image
           className={styles.cardImg}

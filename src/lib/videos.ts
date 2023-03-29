@@ -1,7 +1,7 @@
 import videoData from '../data/videos.json';
 import * as process from "process";
 import {VideosData} from "@/types/video";
-import {getWatchedVideos} from "@/lib/db/hasura";
+import {getFavouritedVideos, getWatchedVideos} from "@/lib/db/hasura";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const baseUrl = 'https://youtube.googleapis.com/youtube/v3';
@@ -63,6 +63,16 @@ export const getYouTubeVideoById = async (videoId: string) => {
 
 export const getWatchedAgainVideos = async (userId: string, token: string) => {
   const videos = await getWatchedVideos(userId, token);
+
+  return videos.map((video: {videoId: string}) => (
+    {
+      id: video.videoId,
+      imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`
+    }))
+}
+
+export const getMyListVideos = async (userId: string, token: string) => {
+  const videos = await getFavouritedVideos(userId, token);
 
   return videos.map((video: {videoId: string}) => (
     {

@@ -4,8 +4,16 @@ import SectionCards from "@/components/sectionCards/SectionCards";
 import {CardSize} from "@/shared";
 
 import styles from '@/styles/MyList.module.css';
+import {GetServerSideProps, NextPage} from "next";
+import {useRedirectUser} from "@/utils/redirectUser";
+import {Video} from "@/types";
+import {getMyListVideos} from "@/lib/videos";
 
-const MyList = () => {
+interface Props {
+  myListVideos: Video[];
+}
+
+const MyList: NextPage<Props> = ({myListVideos}) => {
   return (
     <>
       <Head>
@@ -15,7 +23,13 @@ const MyList = () => {
       <main className={styles.main}>
         <Navbar />
         <div className={styles.sectionWrapper}>
-          <SectionCards title={'My List'} videos={[]} size={CardSize.SMALL} />
+          <SectionCards
+            title={'My List'}
+            videos={myListVideos}
+            size={CardSize.SMALL}
+            wrap
+            shouldScale={false}
+          />
         </div>
       </main>
     </>
@@ -23,3 +37,16 @@ const MyList = () => {
 }
 
 export default MyList;
+
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({req}) => {
+  const {userId, token} = await useRedirectUser(req);
+
+  const myListVideos = await getMyListVideos(userId, token);
+
+  return {
+    props: {
+      myListVideos
+    }
+  }
+}
