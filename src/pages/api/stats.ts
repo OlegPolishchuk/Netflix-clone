@@ -18,7 +18,9 @@ export default async function stats(req: NextApiRequest, res: NextApiResponse) {
     const inputParams = req.method === 'POST' ?  req.body : req.query;
     const {videoId} = inputParams;
 
-    const userId = await verifyToken(token);
+    const payload = await verifyToken(token);
+    const userId = payload.issuer as string;
+
 
     const findVideo = await findVideoByUser(userId, videoId, token);
     const doesStatsExist = findVideo?.length > 0;
