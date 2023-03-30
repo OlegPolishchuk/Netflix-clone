@@ -6,5 +6,5 @@ export const getUserAuthData = async (req: IncomingMessage & {cookies: Partial<{
   const token = req ? req.cookies.token as string : '';
   const payload = await verifyToken(token);
 
-  return {userId: payload.issuer, token}
+  return {userId: payload.issuer as string, token}
 }
