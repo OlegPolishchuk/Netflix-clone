@@ -63,15 +63,6 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({req}) => {
   const {userId, token} = await getUserAuthData(req);
-  //
-  // // if (!userId) {
-  // //   return {
-  // //     redirect: {
-  // //       destination: '/login',
-  // //       permanent: false,
-  // //     }
-  // //   }
-  // // }
 
   const disneyVideos = await getVideos('disney trailers');
   const productivityVideos = await getVideos('productivity');
