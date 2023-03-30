@@ -9,7 +9,9 @@ export default async function logout(req: NextApiRequest, res: NextApiResponse) 
       return res.status(401).json({ message: "User is not logged in" });
     const token = req.cookies.token;
 
-    const userId = await verifyToken(token);
+    const payload = await verifyToken(token);
+    const userId = payload.issuer as string;
+
     removeTokenCookie(res);
     try {
       await magicAdmin.users.logoutByIssuer(userId);
