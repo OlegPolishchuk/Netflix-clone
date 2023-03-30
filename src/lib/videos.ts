@@ -15,7 +15,7 @@ const fetchVideos = async (url: string) => {
 
 export const getCommonVideos = async (searchQuery: string) => {
   try {
-    const isDev = process.env.DEVELOPMENT;
+    const isDev = process.env.NEXT_PUBLIC_DEVELOPMENT;
     const data =  !!isDev ? videoData : await fetchVideos(searchQuery);
     console.log({isDev: !!isDev})
     if (!data) {
