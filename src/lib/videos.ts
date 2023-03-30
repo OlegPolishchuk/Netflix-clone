@@ -17,15 +17,17 @@ export const getCommonVideos = async (searchQuery: string) => {
   try {
     const isDev = process.env.DEVELOPMENT;
     const data =  !!isDev ? videoData : await fetchVideos(searchQuery);
-
+    console.log({isDev: !!isDev})
     if (!data) {
       return []
     }
 
     return data?.items.map((item) => {
+      console.log(item.id)
+      const videoId = typeof item.id === 'string' ? item.id : item.id.videoId;
       return {
         title: item.snippet.title,
-        imgUrl: !!isDev ? item.snippet.thumbnails.high.url : `https://i.ytimg.com/vi/${item.id}/maxresdefault.jpg` ,
+        imgUrl: !!isDev ? item.snippet.thumbnails.high.url : `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` ,
         id: item.id,
       }
     })
