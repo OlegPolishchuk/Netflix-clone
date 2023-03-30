@@ -84,7 +84,10 @@
   height: 3rem /* 48px */;
   min-width: 240px;
   font-size: 1.2rem;
+
+  background-color: #fff;
 }
+
 
 .userMessage {
   margin-top: 0.25rem /* 4px */;
