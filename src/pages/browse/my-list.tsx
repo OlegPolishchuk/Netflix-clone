@@ -5,7 +5,7 @@ import {CardSize} from "@/shared";
 
 import styles from '@/styles/MyList.module.css';
 import {GetServerSideProps, NextPage} from "next";
-import {useRedirectUser} from "@/utils/redirectUser";
+import {getUserAuthData} from "@/utils/redirectUser";
 import {Video} from "@/types";
 import {getMyListVideos} from "@/lib/videos";
 
@@ -40,16 +40,7 @@ export default MyList;
 
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({req}) => {
-  const {userId, token} = await useRedirectUser(req);
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      }
-    }
-  }
+  const {userId, token} = await getUserAuthData(req);
 
   const myListVideos = await getMyListVideos(userId, token);
 

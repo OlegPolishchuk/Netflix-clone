@@ -8,7 +8,7 @@ import {getPopularVideos, getVideos, getWatchedAgainVideos} from "@/lib/videos";
 import {GetServerSideProps, NextPage} from "next";
 import {Video} from "@/types";
 import {verifyToken} from "@/lib/utils";
-import {useRedirectUser} from "@/utils/redirectUser";
+import {getUserAuthData} from "@/utils/redirectUser";
 
 
 type Props = {
@@ -62,16 +62,16 @@ const Home: NextPage<Props> = ({
 export default Home;
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({req}) => {
-  const {userId, token} = await useRedirectUser(req);
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      }
-    }
-  }
+  const {userId, token} = await getUserAuthData(req);
+  //
+  // // if (!userId) {
+  // //   return {
+  // //     redirect: {
+  // //       destination: '/login',
+  // //       permanent: false,
+  // //     }
+  // //   }
+  // // }
 
   const disneyVideos = await getVideos('disney trailers');
   const productivityVideos = await getVideos('productivity');

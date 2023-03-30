@@ -202,7 +202,6 @@ export async function getWatchedVideos(userId: string, token: string) {
 
 
 export async function getFavouritedVideos(userId: string, token: string) {
-  console.log({userId, token})
   const operationsDoc = `
   query favouritedVideos($userId: String!) {
     stats(where: {userId: {_eq: $userId}, favourited: {_eq: 1}}) {

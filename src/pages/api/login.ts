@@ -1,11 +1,12 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {magicAdmin} from "@/lib/magic";
-import jwt from 'jsonwebtoken';
+import {KeyLike, SignJWT} from 'jose';
 import * as process from "process";
 import {isNewUser, createNewUser} from "@/lib/db/hasura";
 import {setTokenCookie} from "@/lib/cookies";
 
-const JWT_SECRET = `${process.env.JWT_SECRET}`;
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+const alg = 'HS256';
 const login = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     try {
@@ -14,7 +15,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const metaData = await magicAdmin.users.getMetadataByToken(didToken);
 
-      const token = jwt.sign(
+      const token = await new SignJWT(
         {
           ...metaData,
           "iat": Math.floor(Date.now() / 1000),
@@ -25,8 +26,9 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
             "x-hasura-user-id": `${metaData.issuer}`
           }
         },
-        JWT_SECRET
-      );
+      )
+        .setProtectedHeader({alg})
+        .sign(JWT_SECRET)
 
       const isNewUserQuery = await isNewUser(token, metaData.issuer);
 
